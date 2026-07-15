@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サイト管理 | 篠原晴哉プロフィールサイト</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icon.jpg">
+<style>
+  :root {
+    --bg: #fdfbf7;
+    --card: #ffffff;
+    --line: #e8e0d2;
+    --text: #2b2620;
+    --text-dim: #7c7365;
+    --accent: #d4553f;
+    --accent-deep: #b8432f;
+    --accent-soft: #fbeae6;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Meiryo", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8;
+    padding: 40px 20px 120px;
+  }
+  .wrap { max-width: 800px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin-bottom: 4px; }
+  .sub { color: var(--text-dim); font-size: 0.88rem; margin-bottom: 28px; }
+  .box {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 20px;
+  }
+  .box h2 { font-size: 1.1rem; margin-bottom: 4px; }
+  .box .desc { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 12px; }
+  label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--text-dim); margin: 12px 0 4px; }
+  input, select, textarea {
+    width: 100%; font-family: inherit; font-size: 0.92rem;
+    padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; color: var(--text);
+  }
+  textarea { min-height: 120px; resize: vertical; line-height: 1.7; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  button {
+    font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    padding: 10px 22px; border-radius: 999px; border: none;
+    background: var(--accent); color: #fff; transition: background 0.2s;
+  }
+  button:hover { background: var(--accent-deep); }
+  button.ghost { background: transparent; border: 1.5px solid var(--accent); color: var(--accent-deep); }
+  button.ghost:hover { background: var(--accent-soft); }
+  button.small { font-size: 0.76rem; padding: 4px 12px; }
+  button.tiny { font-size: 0.76rem; padding: 4px 9px; border-radius: 6px; background: transparent; border: 1px solid var(--line); color: var(--text-dim); }
+  button.tiny:hover { border-color: var(--accent); color: var(--accent-deep); background: transparent; }
+  button.danger { background: transparent; border: 1px solid #c33; color: #c33; }
+  button.danger:hover { background: #fbeaea; }
+  .btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .status { font-size: 0.85rem; margin-top: 12px; color: var(--text-dim); white-space: pre-wrap; }
+  .status.ok { color: #3d7a4a; }
+  .status.err { color: #c33; }
+  ul.entries { list-style: none; margin-top: 8px; }
+  ul.entries li {
+    display: flex; gap: 10px; align-items: center;
+    padding: 10px 4px; border-bottom: 1px solid var(--line);
+  }
+  ul.entries .date { font-size: 0.8rem; color: var(--text-dim); font-weight: 600; min-width: 62px; flex-shrink: 0; }
+  ul.entries .cat {
+    font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 6px;
+    background: var(--accent-soft); color: var(--accent-deep); white-space: nowrap; flex-shrink: 0;
+  }
+  ul.entries .t { flex: 1; font-size: 0.9rem; font-weight: 600; min-width: 0; }
+  ul.entries .t .note { display: block; font-size: 0.78rem; color: var(--text-dim); font-weight: 400; overflow-wrap: anywhere; }
+  ul.entries img.mini {
+    width: 58px; aspect-ratio: 40 / 21; object-fit: cover;
+    border: 1px solid var(--line); border-radius: 4px; flex-shrink: 0;
+  }
+  .thumb-row { display: flex; gap: 8px; align-items: center; }
+  .thumb-row input { flex: 1; }
+  .thumb-row button { white-space: nowrap; flex-shrink: 0; }
+  #o-preview {
+    margin-top: 10px; width: 240px; aspect-ratio: 40 / 21; object-fit: cover;
+    border: 1px solid var(--line); border-radius: 8px; display: block;
+  }
+  #p-preview {
+    margin-top: 10px; width: 110px; height: 110px; object-fit: cover;
+    border: 3px solid #fff; border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  details summary { cursor: pointer; font-weight: 700; font-size: 0.95rem; }
+  details .inner { padding-top: 8px; }
+  .hint { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; }
+  a { color: var(--accent-deep); }
+  .savebar {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: rgba(253, 251, 247, 0.97); border-top: 1px solid var(--line);
+    padding: 14px 20px;
+  }
+  .savebar .in { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .savebar .status { margin: 0; flex: 1; min-width: 200px; }
+  .backlink {
+    display: inline-block; margin-bottom: 18px;
+    font-size: 0.88rem; font-weight: 700; text-decoration: none;
+  }
+  .backlink:hover { text-decoration: underline; }
+  #gate {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .gate-box {
+    width: min(380px, 100%);
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 32px 28px;
+  }
+  .gate-box h1 { font-size: 1.25rem; margin-bottom: 4px; }
+  .gate-box .sub { margin-bottom: 8px; }
+  .gate-box input { margin-top: 8px; }
+  .gate-box .btns { margin-top: 16px; }
+  .gate-box .back { display: inline-block; margin-top: 18px; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gate-box">
+    <h1>サイト管理</h1>
+    <p class="sub">管理パスワードを入力してください。</p>
+    <input type="password" id="gate-pass" placeholder="パスワード" autocomplete="current-password">
+    <div class="btns">
+      <button id="gate-btn">入る</button>
+    </div>
+    <p class="status err" id="gate-err"></p>
+    <a class="back" href="./">← サイトに戻る</a>
+  </div>
+</div>
+<div class="wrap">
+  <a class="backlink" href="./">← サイトを見る</a>
+  <h1>サイト管理</h1>
+  <p class="sub">プロフィールサイトの内容（content.json）を編集して GitHub に保存するページです。保存するまで公開側は変わりません。トークンはこのブラウザの localStorage にのみ保存されます。</p>
+
+  <div class="box">
+    <details id="cfg-details">
+      <summary>接続設定（GitHub）</summary>
+      <div class="inner">
+        <div class="row">
+          <div>
+            <label>ユーザー名（owner）</label>
+            <input id="cfg-owner" placeholder="例: haruyashinohara">
+          </div>
+          <div>
+            <label>リポジトリ名（repo）</label>
+            <input id="cfg-repo" placeholder="例: haruyashinohara.github.io">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>ブランチ</label>
+            <input id="cfg-branch" value="main">
+          </div>
+          <div>
+            <label>ファイルパス</label>
+            <input id="cfg-path" value="content.json">
+          </div>
+        </div>
+        <label>Personal Access Token（Contents: Read and write 権限）</label>
+        <input id="cfg-token" type="password" placeholder="github_pat_...">
+        <p class="hint">GitHub → Settings → Developer settings → Fine-grained personal access tokens で、このリポジトリだけに Contents(Read and write) を許可したトークンを作成してください。</p>
+        <div class="btns">
+          <button class="ghost" id="btn-save-cfg">設定を保存</button>
+          <button class="ghost" id="btn-load-github">GitHubから読み込み</button>
+          <button class="ghost" id="btn-load-site">サイトから読み込み</button>
+        </div>
+        <label>管理パスワードの変更</label>
+        <div class="thumb-row">
+          <input id="cfg-newpass" type="password" placeholder="新しいパスワード（8文字以上）" autocomplete="new-password">
+          <button class="ghost small" id="btn-changepass" type="button">変更</button>
+        </div>
+        <p class="hint">GitHub上の admin.html を書き換えてパスワードを変更します（接続設定が必要）。反映まで1〜2分かかります。</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="box">
+    <h2>公開状態</h2>
+    <p class="desc">ワンクリックで公開サイトを「メンテナンス中」表示に切り替えます。このボタンだけは押すとすぐにGitHubへ保存・反映されます。</p>
+    <p>現在の状態: <strong id="m-state">—</strong></p>
+    <label>メンテナンス中に表示する文言（空欄なら標準の文言）</label>
+    <input id="m-text" placeholder="ただいまサイトの調整をしています。しばらくしてからご覧ください。">
+    <div class="btns">
+      <button id="m-toggle">読み込み中...</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>自己紹介</h2>
+    <p class="desc">トップの写真と紹介文。文章は「**太字**」と改行が使えます。</p>
+    <label>プロフィール写真（画像URL。同じリポジトリ内のファイル名でもOK）</label>
+    <input id="p-photo" placeholder="icon.jpg または https://...">
+    <img id="p-preview" alt="写真プレビュー" hidden>
+    <label>紹介文</label>
+    <textarea id="p-lead"></textarea>
+  </div>
+
+  <div class="box">
+    <h2>経歴</h2>
+    <p class="desc">上から順に表示されます（↑↓で並べ替え）。</p>
+    <ul class="entries" id="h-entries"></ul>
+    <div class="row">
+      <div>
+        <label>年代（例: 2026 - ／ 高校）</label>
+        <input id="h-era">
+      </div>
+      <div>
+        <label>肩書き・タイトル</label>
+        <input id="h-title">
+      </div>
+    </div>
+    <label>所属・組織名</label>
+    <input id="h-org">
+    <label>説明文</label>
+    <textarea id="h-body" style="min-height:80px"></textarea>
+    <div class="btns">
+      <button id="h-add">経歴を追加</button>
+      <button class="ghost" id="h-update" hidden>編集を確定</button>
+      <button class="ghost" id="h-cancel" hidden>編集をやめる</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>アウトプット</h2>
+    <p class="desc">登壇・イベント運営・記事などの活動記録。サムネ付きカードで表示されます（日付の新しい順）。</p>
+    <ul class="entries" id="o-entries"></ul>
+    <div class="row">
+      <div>
+        <label>日付（例: 2026.07）</label>
+        <input id="o-date" placeholder="2026.07">
+      </div>
+      <div>
+        <label>カテゴリ</label>
+        <select id="o-cat">
+          <option>登壇</option>
+          <option>イベント運営</option>
+          <option>ブログ</option>
+          <option>取材</option>
+          <option>コミュニティ活動</option>
+          <option>その他</option>
+        </select>
+      </div>
+    </div>
+    <label>タイトル</label>
+    <input id="o-title" placeholder="例: ◯◯カンファレンス 2026 登壇「タイトル」">
+    <label>ひとことメモ（任意）</label>
+    <input id="o-note" placeholder="例: 初めての登壇でした！">
+    <label>リンクURL（イベントHP・記事など / 任意）</label>
+    <input id="o-url" placeholder="https://...">
+    <label>サムネイル画像</label>
+    <div class="thumb-row">
+      <input id="o-image" placeholder="画像URL（下のボタンで自動取得できます）">
+      <button class="ghost small" id="btn-og" type="button">リンクURLから自動取得</button>
+    </div>
+    <p class="hint">リンクURLにイベントHPや記事のURLを貼って「自動取得」を押すと、そのページのOGP画像（SNSシェア用サムネ）を取得します。画像URLを直接貼ってもOKです。</p>
+    <img id="o-preview" alt="サムネイルプレビュー" hidden>
+    <div class="btns">
+      <button id="o-add">アウトプットを追加</button>
+      <button class="ghost" id="o-update" hidden>編集を確定</button>
+      <button class="ghost" id="o-cancel" hidden>編集をやめる</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>実績</h2>
+    <p class="desc">受賞・入賞・資格のリスト。サイトでは日付の新しい順に表示されます。</p>
+    <ul class="entries" id="a-entries"></ul>
+    <div class="row">
+      <div>
+        <label>年度（例: 2026年度）</label>
+        <input id="a-date" placeholder="2026年度">
+      </div>
+      <div>
+        <label>カテゴリ</label>
+        <select id="a-cat">
+          <option>ハッカソン</option>
+          <option>展示会</option>
+          <option>学内</option>
+          <option>資格</option>
+          <option>その他</option>
+        </select>
+      </div>
+    </div>
+    <label>タイトル</label>
+    <input id="a-title" placeholder="例: ◯◯ハッカソン 最優秀賞">
+    <label>ひとことメモ（任意）</label>
+    <input id="a-note">
+    <div class="btns">
+      <button id="a-add">実績を追加</button>
+      <button class="ghost" id="a-update" hidden>編集を確定</button>
+      <button class="ghost" id="a-cancel" hidden>編集をやめる</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2>コンタクト</h2>
+    <p class="desc">コンタクト欄の文章。「**太字**」と改行が使えます。</p>
+    <label>文章</label>
+    <textarea id="c-text" style="min-height:90px"></textarea>
+  </div>
+</div>
+
+<div class="savebar">
+  <div class="in">
+    <button id="btn-commit">GitHub に保存（公開）</button>
+    <button class="ghost" id="btn-download">JSONをダウンロード</button>
+    <p class="status" id="status"></p>
+  </div>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  // ---- パスワードゲート ----
+  // パスワードのSHA-256ハッシュ。変更は「接続設定 → 管理パスワードの変更」から。
+  // 注意: これはブラウザ内での入口の鍵です。実際の書き込み保護はGitHubトークンが担っています。
+  const PASS_HASH = '48f52540ac2eecf04c0011b63f958fddb1c96cb130727df10e7dee65363ec0b2';
+  async function sha256(s) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function unlock() {
+    const g = $('gate');
+    if (g) g.remove();
+  }
+  $('gate-btn').onclick = async () => {
+    try {
+      const h = await sha256($('gate-pass').value);
+      if (h === PASS_HASH) {
+        sessionStorage.setItem('admin-auth', h);
+        unlock();
+      } else {
+        $('gate-err').textContent = 'パスワードが違います。';
+      }
+    } catch (e) {
+      $('gate-err').textContent = 'この環境では照合できません（https または localhost で開いてください）。';
+    }
+  };
+  $('gate-pass').addEventListener('keydown', e => { if (e.key === 'Enter') $('gate-btn').click(); });
+  if (sessionStorage.getItem('admin-auth') === PASS_HASH) unlock();
+
+  let content = { maintenance: false, maintenanceText: '', profile: { photo: 'icon.jpg', lead: '' }, history: [], outputs: [], awards: [], contact: { text: '' } };
+
+  function normalize(c) {
+    return {
+      maintenance: !!c.maintenance,
+      maintenanceText: typeof c.maintenanceText === 'string' ? c.maintenanceText : '',
+      profile: Object.assign({ photo: 'icon.jpg', lead: '' }, c.profile),
+      history: Array.isArray(c.history) ? c.history : [],
+      outputs: Array.isArray(c.outputs) ? c.outputs : [],
+      awards: Array.isArray(c.awards) ? c.awards : [],
+      contact: Object.assign({ text: '' }, c.contact)
+    };
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  function setStatus(msg, cls) {
+    const el = $('status');
+    el.textContent = msg;
+    el.className = 'status' + (cls ? ' ' + cls : '');
+  }
+
+  // ---- 設定 ----
+  const CFG_KEY = 'site-admin-cfg';
+  function loadCfg() {
+    try { return JSON.parse(localStorage.getItem(CFG_KEY)) || {}; } catch { return {}; }
+  }
+  function fillCfg() {
+    const c = loadCfg();
+    $('cfg-owner').value = c.owner || '';
+    $('cfg-repo').value = c.repo || '';
+    $('cfg-branch').value = c.branch || 'main';
+    $('cfg-path').value = c.path || 'content.json';
+    $('cfg-token').value = c.token || '';
+    if (!c.owner || !c.token) $('cfg-details').open = true;
+  }
+  $('btn-save-cfg').onclick = () => {
+    localStorage.setItem(CFG_KEY, JSON.stringify({
+      owner: $('cfg-owner').value.trim(),
+      repo: $('cfg-repo').value.trim(),
+      branch: $('cfg-branch').value.trim() || 'main',
+      path: $('cfg-path').value.trim() || 'content.json',
+      token: $('cfg-token').value.trim()
+    }));
+    setStatus('設定を保存しました。', 'ok');
+  };
+
+  // ---- 全体描画 ----
+  function renderAll() {
+    $('p-photo').value = content.profile.photo || '';
+    $('p-lead').value = content.profile.lead || '';
+    $('c-text').value = content.contact.text || '';
+    $('m-text').value = content.maintenanceText || '';
+    updatePhotoPreview();
+    renderMaintenance();
+    renderHistory();
+    renderOutputs();
+    renderAwards();
+  }
+
+  // ---- 公開状態（メンテナンスモード） ----
+  function renderMaintenance() {
+    $('m-state').textContent = content.maintenance ? '🛠️ メンテナンス中（非公開）' : '✅ 公開中';
+    const b = $('m-toggle');
+    b.textContent = content.maintenance ? '公開を再開する' : '公開を停止する（メンテナンス表示に）';
+    b.className = content.maintenance ? '' : 'danger';
+  }
+  $('m-text').addEventListener('input', () => { content.maintenanceText = $('m-text').value.trim(); });
+  $('m-toggle').onclick = async () => {
+    const next = !content.maintenance;
+    const q = next
+      ? '公開サイトを「メンテナンス中」表示に切り替えます（すぐにGitHubへ保存されます）。よろしいですか？'
+      : '公開を再開します（すぐにGitHubへ保存されます）。よろしいですか？';
+    if (!confirm(q)) return;
+    const prev = content.maintenance;
+    content.maintenance = next;
+    renderMaintenance();
+    const ok = await commitContent(next ? 'enable maintenance mode' : 'disable maintenance mode');
+    if (ok) {
+      setStatus(next
+        ? 'メンテナンス表示に切り替えました。反映まで1〜2分かかることがあります。'
+        : '公開を再開しました。反映まで1〜2分かかることがあります。', 'ok');
+    } else {
+      content.maintenance = prev;
+      renderMaintenance();
+    }
+  };
+
+  // ---- 自己紹介 ----
+  function updatePhotoPreview() {
+    const url = $('p-photo').value.trim();
+    $('p-preview').hidden = !url;
+    if (url) $('p-preview').src = url;
+  }
+  $('p-photo').addEventListener('input', () => { content.profile.photo = $('p-photo').value.trim(); updatePhotoPreview(); });
+  $('p-lead').addEventListener('input', () => { content.profile.lead = $('p-lead').value; });
+  $('c-text').addEventListener('input', () => { content.contact.text = $('c-text').value; });
+
+  // ---- 汎用リスト操作 ----
+  function move(arr, i, d) {
+    const j = i + d;
+    if (j < 0 || j >= arr.length) return;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  function setEditMode(prefix, on) {
+    $(prefix + '-add').hidden = on;
+    $(prefix + '-update').hidden = !on;
+    $(prefix + '-cancel').hidden = !on;
+  }
+
+  // ---- 経歴 ----
+  let hEdit = -1;
+  function renderHistory() {
+    $('h-entries').innerHTML = content.history.map((it, i) => `
+      <li>
+        <span class="date">${esc(it.era || '')}</span>
+        <span class="t">${esc(it.title || '')}<span class="note">${esc(it.org || '')}</span></span>
+        <button class="tiny" data-act="h-up" data-i="${i}">↑</button>
+        <button class="tiny" data-act="h-down" data-i="${i}">↓</button>
+        <button class="small ghost" data-act="h-edit" data-i="${i}">編集</button>
+        <button class="small danger" data-act="h-del" data-i="${i}">削除</button>
+      </li>`).join('');
+  }
+  function hReadForm() {
+    return { era: $('h-era').value.trim(), title: $('h-title').value.trim(), org: $('h-org').value.trim(), body: $('h-body').value.trim() };
+  }
+  function hClear() {
+    ['h-era', 'h-title', 'h-org', 'h-body'].forEach(id => $(id).value = '');
+    hEdit = -1; setEditMode('h', false);
+  }
+  $('h-add').onclick = () => {
+    const it = hReadForm();
+    if (!it.title) { setStatus('経歴のタイトルは必須です。', 'err'); return; }
+    content.history.push(it); hClear(); renderHistory();
+    setStatus('経歴を追加しました（未保存）。');
+  };
+  $('h-update').onclick = () => {
+    const it = hReadForm();
+    if (!it.title) { setStatus('経歴のタイトルは必須です。', 'err'); return; }
+    content.history[hEdit] = it; hClear(); renderHistory();
+    setStatus('経歴を編集しました（未保存）。');
+  };
+  $('h-cancel').onclick = () => { hClear(); setStatus(''); };
+
+  // ---- アウトプット ----
+  let oEdit = -1;
+  function renderOutputs() {
+    $('o-entries').innerHTML = content.outputs.map((it, i) => `
+      <li>
+        ${it.image ? `<img class="mini" src="${esc(it.image)}" alt="">` : ''}
+        <span class="date">${esc(it.date || '')}</span>
+        <span class="cat">${esc(it.category || '')}</span>
+        <span class="t">${esc(it.title || '')}${it.note ? `<span class="note">${esc(it.note)}</span>` : ''}</span>
+        <button class="small ghost" data-act="o-edit" data-i="${i}">編集</button>
+        <button class="small danger" data-act="o-del" data-i="${i}">削除</button>
+      </li>`).join('');
+  }
+  function oReadForm() {
+    return {
+      date: $('o-date').value.trim(), category: $('o-cat').value,
+      title: $('o-title').value.trim(), note: $('o-note').value.trim(),
+      url: $('o-url').value.trim(), image: $('o-image').value.trim()
+    };
+  }
+  function oClear() {
+    ['o-date', 'o-title', 'o-note', 'o-url', 'o-image'].forEach(id => $(id).value = '');
+    updateThumbPreview(); oEdit = -1; setEditMode('o', false);
+  }
+  $('o-add').onclick = () => {
+    const it = oReadForm();
+    if (!it.title) { setStatus('アウトプットのタイトルは必須です。', 'err'); return; }
+    content.outputs.push(it); oClear(); renderOutputs();
+    setStatus('アウトプットを追加しました（未保存）。');
+  };
+  $('o-update').onclick = () => {
+    const it = oReadForm();
+    if (!it.title) { setStatus('アウトプットのタイトルは必須です。', 'err'); return; }
+    content.outputs[oEdit] = it; oClear(); renderOutputs();
+    setStatus('アウトプットを編集しました（未保存）。');
+  };
+  $('o-cancel').onclick = () => { oClear(); setStatus(''); };
+
+  function updateThumbPreview() {
+    const url = $('o-image').value.trim();
+    $('o-preview').hidden = !url;
+    if (url) $('o-preview').src = url;
+  }
+  $('o-image').addEventListener('input', updateThumbPreview);
+
+  async function fetchOgImage(pageUrl) {
+    if (/\.(png|jpe?g|gif|webp|avif|svg)(\?.*)?$/i.test(pageUrl)) return pageUrl;
+    const proxies = [
+      u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+      u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`
+    ];
+    let lastErr = 'ページを取得できませんでした';
+    for (const p of proxies) {
+      try {
+        const r = await fetch(p(pageUrl));
+        if (!r.ok) continue;
+        const html = await r.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const meta = doc.querySelector(
+          'meta[property="og:image"], meta[name="og:image"], meta[property="og:image:url"], meta[name="twitter:image"], meta[property="twitter:image"]'
+        );
+        if (meta && meta.content) return new URL(meta.content, pageUrl).href;
+        lastErr = 'このページにはOGP画像が設定されていないようです';
+      } catch (e) { /* 次のプロキシへ */ }
+    }
+    throw new Error(lastErr);
+  }
+  $('btn-og').onclick = async () => {
+    const pageUrl = $('o-url').value.trim();
+    if (!pageUrl) { setStatus('先に「リンクURL」を入力してください。', 'err'); return; }
+    setStatus('OGP画像を取得中...');
+    try {
+      $('o-image').value = await fetchOgImage(pageUrl);
+      updateThumbPreview();
+      setStatus('サムネイルを取得しました。プレビューを確認してください。', 'ok');
+    } catch (e) {
+      setStatus('自動取得に失敗しました（' + e.message + '）。画像URLを直接貼り付けてください。', 'err');
+    }
+  };
+
+  // ---- 実績 ----
+  let aEdit = -1;
+  function renderAwards() {
+    $('a-entries').innerHTML = content.awards.map((it, i) => `
+      <li>
+        <span class="date">${esc(it.date || '')}</span>
+        <span class="cat">${esc(it.category || '')}</span>
+        <span class="t">${esc(it.title || '')}${it.note ? `<span class="note">${esc(it.note)}</span>` : ''}</span>
+        <button class="small ghost" data-act="a-edit" data-i="${i}">編集</button>
+        <button class="small danger" data-act="a-del" data-i="${i}">削除</button>
+      </li>`).join('');
+  }
+  function aReadForm() {
+    return { date: $('a-date').value.trim(), category: $('a-cat').value, title: $('a-title').value.trim(), note: $('a-note').value.trim() };
+  }
+  function aClear() {
+    ['a-date', 'a-title', 'a-note'].forEach(id => $(id).value = '');
+    aEdit = -1; setEditMode('a', false);
+  }
+  $('a-add').onclick = () => {
+    const it = aReadForm();
+    if (!it.title) { setStatus('実績のタイトルは必須です。', 'err'); return; }
+    content.awards.push(it); aClear(); renderAwards();
+    setStatus('実績を追加しました（未保存）。');
+  };
+  $('a-update').onclick = () => {
+    const it = aReadForm();
+    if (!it.title) { setStatus('実績のタイトルは必須です。', 'err'); return; }
+    content.awards[aEdit] = it; aClear(); renderAwards();
+    setStatus('実績を編集しました（未保存）。');
+  };
+  $('a-cancel').onclick = () => { aClear(); setStatus(''); };
+
+  // ---- リストのボタン（編集・削除・並べ替え）を一括処理 ----
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const i = Number(btn.dataset.i);
+    const act = btn.dataset.act;
+    if (act === 'h-up' || act === 'h-down') { move(content.history, i, act === 'h-up' ? -1 : 1); renderHistory(); }
+    if (act === 'h-del') { if (confirm(`「${content.history[i].title}」を削除しますか？`)) { content.history.splice(i, 1); renderHistory(); } }
+    if (act === 'h-edit') {
+      hEdit = i; const it = content.history[i];
+      $('h-era').value = it.era || ''; $('h-title').value = it.title || '';
+      $('h-org').value = it.org || ''; $('h-body').value = it.body || '';
+      setEditMode('h', true);
+    }
+    if (act === 'o-del') { if (confirm(`「${content.outputs[i].title}」を削除しますか？`)) { content.outputs.splice(i, 1); renderOutputs(); } }
+    if (act === 'o-edit') {
+      oEdit = i; const it = content.outputs[i];
+      $('o-date').value = it.date || ''; $('o-cat').value = it.category || 'その他';
+      $('o-title').value = it.title || ''; $('o-note').value = it.note || '';
+      $('o-url').value = it.url || ''; $('o-image').value = it.image || '';
+      updateThumbPreview(); setEditMode('o', true);
+    }
+    if (act === 'a-del') { if (confirm(`「${content.awards[i].title}」を削除しますか？`)) { content.awards.splice(i, 1); renderAwards(); } }
+    if (act === 'a-edit') {
+      aEdit = i; const it = content.awards[i];
+      $('a-date').value = it.date || ''; $('a-cat').value = it.category || 'その他';
+      $('a-title').value = it.title || ''; $('a-note').value = it.note || '';
+      setEditMode('a', true);
+    }
+  });
+
+  // ---- 読み込み ----
+  $('btn-load-site').onclick = async () => {
+    try {
+      const r = await fetch('content.json', { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      content = normalize(await r.json());
+      renderAll();
+      setStatus('サイトの content.json を読み込みました。', 'ok');
+    } catch (e) {
+      setStatus('読み込みに失敗しました: ' + e.message, 'err');
+    }
+  };
+  function api(cfg, method, body, path) {
+    return fetch(
+      `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path || cfg.path}` +
+        (method === 'GET' ? `?ref=${cfg.branch}` : ''),
+      {
+        method,
+        headers: {
+          Authorization: 'Bearer ' + cfg.token,
+          Accept: 'application/vnd.github+json'
+        },
+        body: body ? JSON.stringify(body) : undefined
+      }
+    );
+  }
+  $('btn-load-github').onclick = async () => {
+    const cfg = loadCfg();
+    if (!cfg.owner || !cfg.token) { setStatus('先に接続設定を保存してください。', 'err'); return; }
+    try {
+      const r = await api(cfg, 'GET');
+      if (r.status === 404) { setStatus('GitHub上にまだファイルがありません（保存時に新規作成されます）。', 'ok'); return; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      const text = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+      content = normalize(JSON.parse(text));
+      renderAll();
+      setStatus('GitHubから読み込みました。', 'ok');
+    } catch (e) {
+      setStatus('GitHubからの読み込みに失敗しました: ' + e.message, 'err');
+    }
+  };
+
+  // ---- 保存 ----
+  async function commitContent(message) {
+    const cfg = loadCfg();
+    if (!cfg.owner || !cfg.repo || !cfg.token) { setStatus('先に接続設定を保存してください。', 'err'); return false; }
+    setStatus('保存中...');
+    try {
+      let sha;
+      const cur = await api(cfg, 'GET');
+      if (cur.ok) sha = (await cur.json()).sha;
+      const body = btoa(unescape(encodeURIComponent(
+        JSON.stringify(content, null, 2) + '\n'
+      )));
+      const r = await api(cfg, 'PUT', {
+        message,
+        content: body,
+        branch: cfg.branch,
+        ...(sha ? { sha } : {})
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error('HTTP ' + r.status + (err.message ? ' — ' + err.message : ''));
+      }
+      return true;
+    } catch (e) {
+      setStatus('保存に失敗しました: ' + e.message, 'err');
+      return false;
+    }
+  }
+  $('btn-commit').onclick = async () => {
+    if (!confirm('content.json を GitHub にコミットして公開します。よろしいですか？')) return;
+    if (await commitContent('update site content')) {
+      setStatus('保存しました！GitHub Pages への反映まで1〜2分かかることがあります。', 'ok');
+    }
+  };
+  // ---- 管理パスワードの変更（GitHub上の admin.html を書き換える） ----
+  $('btn-changepass').onclick = async () => {
+    const np = $('cfg-newpass').value;
+    if (np.length < 8) { setStatus('パスワードは8文字以上にしてください。', 'err'); return; }
+    const cfg = loadCfg();
+    const nh = await sha256(np);
+    if (!cfg.owner || !cfg.repo || !cfg.token) {
+      setStatus('接続設定が未入力のため自動変更できません。\n手動で変更する場合は admin.html 内の PASS_HASH を次の値に書き換えてください:\n' + nh, 'err');
+      return;
+    }
+    if (!confirm('GitHub上の admin.html を書き換えてパスワードを変更します。よろしいですか？')) return;
+    setStatus('パスワードを変更中...');
+    try {
+      const r = await api(cfg, 'GET', null, 'admin.html');
+      if (!r.ok) throw new Error('admin.html を取得できませんでした (HTTP ' + r.status + ')');
+      const data = await r.json();
+      const text = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+      if (!text.includes(PASS_HASH)) throw new Error('GitHub上の admin.html に現在のハッシュが見つかりませんでした');
+      const updated = text.replace(PASS_HASH, nh);
+      const put = await api(cfg, 'PUT', {
+        message: 'change admin password',
+        content: btoa(unescape(encodeURIComponent(updated))),
+        branch: cfg.branch,
+        sha: data.sha
+      }, 'admin.html');
+      if (!put.ok) {
+        const err = await put.json().catch(() => ({}));
+        throw new Error('HTTP ' + put.status + (err.message ? ' — ' + err.message : ''));
+      }
+      sessionStorage.setItem('admin-auth', nh);
+      $('cfg-newpass').value = '';
+      setStatus('パスワードを変更しました。GitHub Pages への反映まで1〜2分かかることがあります。', 'ok');
+    } catch (e) {
+      setStatus('パスワード変更に失敗しました: ' + e.message, 'err');
+    }
+  };
+
+  $('btn-download').onclick = () => {
+    const blob = new Blob([JSON.stringify(content, null, 2) + '\n'], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'content.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  fillCfg();
+  $('btn-load-site').click();
+</script>
+</body>
+</html>

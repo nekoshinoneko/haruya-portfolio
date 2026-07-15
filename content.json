@@ -1,0 +1,95 @@
+{
+  "profile": {
+    "photo": "icon.jpg",
+    "lead": "こんにちは、篠原晴哉です！\n小学生の頃、父の影響でロボット製作に出会い、ロボカップジュニアで全国大会に2回出場。都島工業高校ではレスキューロボットコンテストにキャプテンとして打ち込みました。\nECCコンピュータ専門学校では **ECC_IoT部を創部** し、ハッカソン・展示会で **25回以上の受賞・入賞** を重ねながら、部を **50名を超える組織** へと育てました。うめきたTechBaseや大阪・関西万博の SxPARK など、イベントの企画・運営でも精力的に活動。\n2026年からはウイングアーク1st株式会社で、技術とビジネスの橋渡し役（技術営業）として働いています。"
+  },
+  "history": [
+    {
+      "era": "2026 -",
+      "title": "技術営業",
+      "org": "ウイングアーク1st株式会社",
+      "body": "ロボット・IoT・ソフトウェア開発で培った技術理解を土台に、技術とビジネスの橋渡しに取り組んでいます。ECC_IoT部の後輩3名が自身のリファラルで同社へ入社（27卒）。"
+    },
+    {
+      "era": "2025 -",
+      "title": "イベント企画・運営",
+      "org": "うめきたTechBase ／ SxPARK（大阪・関西万博）",
+      "body": "4年次からは「出場する側」から「場を作る側」へ。学生エンジニアと社会をつなぐイベントで、企画側として精力的に活動しました。"
+    },
+    {
+      "era": "2023 - 2026",
+      "title": "ECC_IoT部 創部・運営",
+      "org": "ECCコンピュータ専門学校",
+      "body": "1年生の3月に部をゼロから創部。作品制作とコンテスト出場を軸に活動を広げ、最終的に50名を超える組織へと成長させました。"
+    },
+    {
+      "era": "2022 - 2026",
+      "title": "高度情報処理研究学科 IT開発エキスパートコース",
+      "org": "ECCコンピュータ専門学校",
+      "body": "4年間、開発漬けの日々を送る。ハッカソン・展示会に多数出場し、受賞・入賞25回以上。"
+    },
+    {
+      "era": "高校",
+      "title": "レスキューロボットコンテスト キャプテン",
+      "org": "大阪府立都島工業高等学校",
+      "body": "レスキューロボットコンテストにキャプテンとして注力。コロナ禍で最後の大会はリモート開催となりましたが、チームを率いて最後までやり抜きました。"
+    },
+    {
+      "era": "小学生 - 中学",
+      "title": "ロボカップジュニア「サッカー ライトウェイト」",
+      "org": "全国大会 2回出場",
+      "body": "父の影響で小学生からロボット製作に打ち込む。ここがすべての原点です。"
+    }
+  ],
+  "outputs": [
+    {
+      "date": "2025",
+      "category": "イベント運営",
+      "title": "SxPARK（大阪・関西万博）",
+      "note": "学生エンジニアの展示イベントを企画側として運営",
+      "url": "",
+      "image": ""
+    },
+    {
+      "date": "2025",
+      "category": "イベント運営",
+      "title": "うめきたTechBase",
+      "note": "企画・運営として参加",
+      "url": "",
+      "image": ""
+    }
+  ],
+  "awards": [
+    { "date": "2025年度", "category": "学内", "title": "＋E展 後期 金賞受賞", "note": "学内最大の作品展で最高賞" },
+    { "date": "2025年度", "category": "学内", "title": "＋E展 前期 企業賞受賞", "note": "" },
+    { "date": "2025年度", "category": "学内", "title": "ECC EXPO 2026 ノミネート", "note": "" },
+    { "date": "2025年度", "category": "学内", "title": "ECC EXPO 2025 ノミネート", "note": "" },
+    { "date": "2025年度", "category": "展示会", "title": "TechSeekerコレクション2025 入賞", "note": "3年連続入賞" },
+    { "date": "2025年度", "category": "ハッカソン", "title": "技育CAMP2025 ハッカソン Vol.13 入賞", "note": "" },
+    { "date": "2025年度", "category": "ハッカソン", "title": "技育CAMP2025 ハッカソン Vol.6 入賞", "note": "" },
+    { "date": "2024年度", "category": "学内", "title": "＋E展 前期 銀賞受賞", "note": "" },
+    { "date": "2024年度", "category": "学内", "title": "ECC Global Education Awards 入賞", "note": "" },
+    { "date": "2024年度", "category": "展示会", "title": "TechSeekerコレクション2024 入賞", "note": "" },
+    { "date": "2024年度", "category": "展示会", "title": "FLY ON PROTO FES 2025 入賞", "note": "" },
+    { "date": "2024年度", "category": "展示会", "title": "PROTO FES 2024 入賞", "note": "" },
+    { "date": "2024年度", "category": "展示会", "title": "技育博2024 vol.4 入賞", "note": "" },
+    { "date": "2024年度", "category": "ハッカソン", "title": "技育CAMP2024 ハッカソン Vol.10 入賞", "note": "" },
+    { "date": "2024年度", "category": "ハッカソン", "title": "Track Job Hackathon 入賞", "note": "" },
+    { "date": "2023年度", "category": "学内", "title": "＋E展 前期 銀賞・銅賞 ／ 後期 銀賞・入賞", "note": "" },
+    { "date": "2023年度", "category": "学内", "title": "第6回 ECC Global Education Awards 入賞", "note": "" },
+    { "date": "2023年度", "category": "学内", "title": "ECC EXPO 2024 ノミネート", "note": "" },
+    { "date": "2023年度", "category": "展示会", "title": "TechSeekerコレクション2023 入賞", "note": "" },
+    { "date": "2023年度", "category": "展示会", "title": "PROTO FES 入賞", "note": "" },
+    { "date": "2023年度", "category": "展示会", "title": "技育博2024 vol.1 入賞", "note": "" },
+    { "date": "2023年度", "category": "ハッカソン", "title": "技育CAMPキャラバンハッカソン2023 in 名古屋 入賞", "note": "" },
+    { "date": "2023年度", "category": "ハッカソン", "title": "技育CAMPキャラバンハッカソン2023 in 金沢 入賞", "note": "" },
+    { "date": "2023年度", "category": "ハッカソン", "title": "技育CAMPキャラバンハッカソン2023 in 京都 入賞", "note": "" },
+    { "date": "2023年度", "category": "ハッカソン", "title": "技育CAMPアドバンス 入賞", "note": "" },
+    { "date": "2023年度", "category": "ハッカソン", "title": "Open Hack U OSAKA 入賞", "note": "" },
+    { "date": "2023年度", "category": "ハッカソン", "title": "Open Hack U 2023 NAGOYA 入賞", "note": "" },
+    { "date": "2022年度", "category": "資格", "title": "Oracle認定Javaプログラマ OCJ-P Bronze 取得", "note": "" }
+  ],
+  "contact": {
+    "text": "イベント登壇・出展のお誘い、ものづくりや学生コミュニティに関するご相談、「ちょっと話してみたい」など、どんな内容でも歓迎です。連絡は X（Twitter）のDMが一番早いです！"
+  }
+}
